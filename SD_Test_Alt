@@ -1,0 +1,45 @@
+#include <SD.h>
+#include <SPI.h>
+
+File file;
+
+void setup() {
+
+  Serial.begin(115200);
+  Serial.println("Initialising SD Card...");
+
+  if (!SD.begin(4)) {
+    Serial.println("Initialise SD Failed!");
+    return;
+  }
+
+  Serial.println("Initialisation Successful!");
+
+  Serial.println("Creating File...");
+
+  file = SD.open("testlog.txt", FILE_WRITE);
+  file.close();
+
+  Serial.println("File Created!");
+}
+
+void loop() {
+
+  if (SD.exists("testlog.txt")) {
+    Serial.println("File Exists!");
+
+    file = SD.open("testlog.txt", FILE_WRITE);
+
+    if (file) {
+      Serial.println("File Can Be Written To!");
+      file.println("The time now is: " + String(millis()));
+      file.close();
+    } else {
+      Serial.println("File Cannot Be Written To!");
+    }
+  } else {
+    Serial.println("File Doesn't Exist!");
+  }
+
+  delay(1000);
+}
